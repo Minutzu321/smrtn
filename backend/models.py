@@ -8,8 +8,8 @@ class IP(models.Model):
 
 class Utilizator(models.Model):
     nume = models.CharField(max_length=100)
-    email = models.EmailField()
-    cod_secret = models.UUIDField(default=uuid.uuid4())
+    parola = models.CharField(max_length=100, default=str(uuid.uuid4()))
+    cod_secret = models.CharField(max_length=100, default=str(uuid.uuid4()))
     prima_logare = models.DateTimeField(default=timezone.now)
     ultima_logare = models.DateTimeField(default=timezone.now)
     ipuri = models.ManyToManyField(IP, blank=True)

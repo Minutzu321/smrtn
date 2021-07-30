@@ -1,0 +1,80 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina principala</title>
+</head>
+<body>
+    <h1>Introduceti codul mai jos si aplicati pasii.</h1>
+<textarea id="cod" cols="30" rows="10" style="width: 100%;"></textarea>
+<br>
+<button id="bc1" onclick="trimcod1()">Compileaza #1</button>
+<hr>
+<button id="bc2" onclick="trimcod2()">Compileaza #2</button>
+<hr>
+<button id="bc3" onclick="trimcod3()">Compileaza #3</button>
+
+<script>
+    var lastcomp = 1;
+    var lastrez = undefined;
+    function senddata(data){
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function () {
+            if (this.readyState != 4) return;
+
+            if (this.status == 200) {
+                var raspuns = JSON.parse(this.responseText);
+                lastcomp++;
+                lastrez = raspuns;
+                console.log(raspuns);
+                update();
+            }
+        };
+
+        xhr.open("POST", "/", true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+        xhr.send(JSON.stringify({
+            data: data
+        }));
+    }
+
+    function update(){
+        if(lastcomp==1){
+            document.getElementById("bc1").disabled = false;
+            document.getElementById("bc2").disabled = true;
+            document.getElementById("bc3").disabled = true;
+        }
+        if(lastcomp==2){
+            document.getElementById("bc1").disabled = true;
+            document.getElementById("bc2").disabled = false;
+            document.getElementById("bc3").disabled = true;
+        }
+        if(lastcomp==3){
+            document.getElementById("bc1").disabled = true;
+            document.getElementById("bc2").disabled = true;
+            document.getElementById("bc3").disabled = false;
+        }
+        if(lastcomp==4){
+            lastcomp = 1;
+            lastrez = undefined;
+            update();
+        }
+    }
+
+    function trimcod1(){
+        senddata(document.getElementById("cod").value)
+    }
+    function trimcod2(){
+        senddata(lastrez)
+    }
+    function trimcod3(){
+        senddata(lastrez)
+    }
+
+    update();
+</script>
+</body>
+</html>
