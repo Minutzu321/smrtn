@@ -2,9 +2,6 @@ from django.db import models
 import uuid
 from django.utils import timezone
 
-
-# Create your models here.
-
 class IP(models.Model):
     ip = models.GenericIPAddressField()
     ora_data = models.DateTimeField(default=timezone.now)
@@ -16,3 +13,8 @@ class Utilizator(models.Model):
     prima_logare = models.DateTimeField(default=timezone.now)
     ultima_logare = models.DateTimeField(default=timezone.now)
     ipuri = models.ManyToManyField(IP, blank=True)
+    acceptat = models.BooleanField(default=True)
+
+class Executabil(models.Model):
+    program = models.FileField(upload_to='programe/%d/%m/%Y/')
+    ora_data_upload = models.DateTimeField(default=timezone.now)
