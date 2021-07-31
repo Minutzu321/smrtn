@@ -5,6 +5,8 @@ from django.utils import timezone
 class IP(models.Model):
     ip = models.GenericIPAddressField()
     ora_data = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return str(self.ip)
 
 class Utilizator(models.Model):
     nume = models.CharField(max_length=100)
@@ -14,7 +16,11 @@ class Utilizator(models.Model):
     ultima_logare = models.DateTimeField(default=timezone.now)
     ipuri = models.ManyToManyField(IP, blank=True)
     acceptat = models.BooleanField(default=True)
+    def __str__(self):
+        return str(self.nume)
 
 class Executabil(models.Model):
     program = models.FileField(upload_to='programe/%d/%m/%Y/')
     ora_data_upload = models.DateTimeField(default=timezone.now)
+    def __str__(self):
+        return str(self.program)

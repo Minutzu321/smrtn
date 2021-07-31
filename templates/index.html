@@ -7,13 +7,14 @@
 </head>
 <body>
     <h1>Introduceti codul mai jos si aplicati pasii.</h1>
-<textarea id="cod" cols="30" rows="10" style="width: 100%;"></textarea>
+<textarea id="cod" cols="30" rows="30" style="width: 100%;"></textarea>
 <br>
 <button id="bc1" onclick="trimcod1()">Compileaza #1</button>
 <hr>
 <button id="bc2" onclick="trimcod2()">Compileaza #2</button>
 <hr>
 <button id="bc3" onclick="trimcod3()">Compileaza #3</button>
+<textarea disabled id="rez" cols="30" rows="30" style="width: 100%;">TESTETS</textarea>
 
 <script>
     var lastcomp = 1;
@@ -27,7 +28,7 @@
             if (this.status == 200) {
                 var raspuns = JSON.parse(this.responseText);
                 lastcomp++;
-                lastrez = raspuns;
+                lastrez = raspuns.raspuns;
                 console.log(raspuns);
                 update();
             }
@@ -65,12 +66,15 @@
     }
 
     function trimcod1(){
+        document.getElementById("bc1").disabled = true;
         senddata(document.getElementById("cod").value)
     }
     function trimcod2(){
+        document.getElementById("bc2").disabled = true;
         senddata(lastrez)
     }
     function trimcod3(){
+        document.getElementById("bc3").disabled = true;
         senddata(lastrez)
     }
 
