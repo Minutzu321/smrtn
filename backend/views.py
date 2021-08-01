@@ -4,7 +4,14 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from .models import *
 import logging
 import json
+from shutil import copyfile
 from .forms import LoginForm
+
+from pathlib import Path
+import os
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 #functii ajutatoare
 def get_client_ip(request):
@@ -33,6 +40,25 @@ def cookie_protocol(request):
         except:
             return None
 
+def getExecutabil():
+    try:
+        exec = Executabil.objects.latest('ora_data_upload')
+        if exec:
+            return exec
+        else:
+            return None
+    except:
+        return None
+
+def pregatesteExecutabilul(exec, nume):
+    pth = os.path.join(BASE_DIR, 'executabile_utilizatori', nume)
+    try:
+        os.makedirs(os.path.join(BASE_DIR, 'executabile_utilizatori'))
+    except: pass
+    copyfile(exec.program.path, pth)
+    return pth
+
+
 
 # PAGINI
 @ensure_csrf_cookie
@@ -42,6 +68,9 @@ def index(request):
         if not user.acceptat:
             return render(request, 'templates/login.html', {'eroare': "<h2 style='color: red'>Contul a fost dezactivat.</h2>"})
         if request.method == 'POST':
+            e = getExecutabil()
+            if e:
+                pregatesteExecutabilul(e, user.nume)
             return JsonResponse({'raspuns': 'da'})
         raspuns = render(request, 'templates/index.html')
     else:

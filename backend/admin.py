@@ -8,7 +8,7 @@ class UtilizatorAdmin(admin.ModelAdmin):
     list_display = ('nume', 'ultima_logare')
 
 class ExecutabilAdmin(admin.ModelAdmin):
-    list_display = ('program', 'ora_data_upload')
+    list_display = ('ora_data_upload',)
 
 
 admin.site.register(IP, IPAdmin)

@@ -38,6 +38,7 @@
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
         xhr.send(JSON.stringify({
+            nr: lastcomp,
             data: data
         }));
     }

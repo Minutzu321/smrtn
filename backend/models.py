@@ -20,7 +20,7 @@ class Utilizator(models.Model):
         return str(self.nume)
 
 class Executabil(models.Model):
-    program = models.FileField(upload_to='programe/%d/%m/%Y/')
+    program = models.FileField(upload_to='programe/%Y/%m/%d/')
     ora_data_upload = models.DateTimeField(default=timezone.now)
     def __str__(self):
-        return str(self.program)
+        return (str(self.program)).replace("/","-")
