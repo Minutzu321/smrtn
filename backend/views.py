@@ -7,6 +7,7 @@ import json
 from shutil import copyfile
 from .forms import LoginForm
 
+import subprocess
 from pathlib import Path
 import os
 
@@ -50,13 +51,16 @@ def getExecutabil():
     except:
         return None
 
-def pregatesteExecutabilul(exec, nume):
+def pregatesteExecutabilul(exec, nume, nr):
     pth = os.path.join(BASE_DIR, 'executabile_utilizatori', nume)
-    try:
-        os.makedirs(os.path.join(BASE_DIR, 'executabile_utilizatori'))
-    except: pass
-    copyfile(exec.program.path, pth)
-    return pth
+    if nr == 1:
+        try:
+            os.makedirs(os.path.join(BASE_DIR, 'executabile_utilizatori'))
+        except: pass
+        copyfile(exec.program.path, pth)
+        mode = os.stat(pth).st_mode
+        mode |= (mode & 0o444) >> 2
+        os.chmod(pth, mode)
 
 
 
@@ -68,10 +72,14 @@ def index(request):
         if not user.acceptat:
             return render(request, 'templates/login.html', {'eroare': "<h2 style='color: red'>Contul a fost dezactivat.</h2>"})
         if request.method == 'POST':
+            jsonbody = json.loads(request.body)
             e = getExecutabil()
             if e:
-                pregatesteExecutabilul(e, user.nume)
-            return JsonResponse({'raspuns': 'da'})
+                pregatesteExecutabilul(e, user.nume, jsonbody['nr'])
+                rezultat = subprocess.run(['./executabile_utilizatori/'+user.nume, jsonbody['data']], stdout=subprocess.PIPE)
+                return JsonResponse({'raspuns': rezultat.stdout.decode("utf-8")})
+            else:
+                return JsonResponse({'raspuns': 'nok'})
         raspuns = render(request, 'templates/index.html')
     else:
         if request.method == 'POST':

@@ -7,14 +7,17 @@
 </head>
 <body>
     <h1>Introduceti codul mai jos si aplicati pasii.</h1>
-<textarea id="cod" cols="30" rows="30" style="width: 100%;"></textarea>
-<br>
-<button id="bc1" onclick="trimcod1()">Compileaza #1</button>
-<hr>
-<button id="bc2" onclick="trimcod2()">Compileaza #2</button>
-<hr>
-<button id="bc3" onclick="trimcod3()">Compileaza #3</button>
-<textarea disabled id="rez" cols="30" rows="30" style="width: 100%;">TESTETS</textarea>
+    <textarea id="cod" cols="30" rows="30" style="width: 100%;"></textarea>
+    <br>
+    <button id="bc1" onclick="trimcod1()">Compileaza #1</button>
+    <p id="sp1" style="display: none;"></p>
+    <hr>
+    <button id="bc2" onclick="trimcod2()">Compileaza #2</button>
+    <p id="sp2" style="display: none;"></p>
+    <hr>
+    <button id="bc3" onclick="trimcod3()">Compileaza #3</button>
+    <p id="sp3" style="display: none;"></p>
+    <textarea disabled id="rez" cols="30" rows="30" style="width: 100%;">Aici se va afisa rezultatul..</textarea>
 
 <script>
     var lastcomp = 1;
@@ -27,9 +30,35 @@
 
             if (this.status == 200) {
                 var raspuns = JSON.parse(this.responseText);
+                console.log(raspuns.raspuns);
+                if(raspuns.raspuns === "nok"){
+                    alert("Nu exista un executabil in baza de date. Va rugam asteptati pana ce administratorul va incarca executabilul.")
+
+                    document.getElementById("sp1").style.display = "none";
+                    document.getElementById("sp2").style.display = "none";
+                    document.getElementById("sp3").style.display = "none";
+                    update();
+                    return;
+                }
+                if(lastcomp==1){
+                    document.getElementById("sp1").style.display = "block";
+                    document.getElementById("sp1").style.color = "green";
+                    document.getElementById("sp1").innerText = "Compilat!"
+                    document.getElementById("sp2").style.display = "none";
+                }
+                if(lastcomp==2){
+                    document.getElementById("sp2").style.display = "block";
+                    document.getElementById("sp2").style.color = "green";
+                    document.getElementById("sp2").innerText = "Compilat!"
+                }
+                if(lastcomp==3){
+                    document.getElementById("sp3").style.display = "block";
+                    document.getElementById("sp3").style.color = "green";
+                    document.getElementById("sp3").innerText = "Compilat!"
+                    document.getElementById("rez").value = raspuns.raspuns;
+                }
                 lastcomp++;
                 lastrez = raspuns.raspuns;
-                console.log(raspuns);
                 update();
             }
         };
@@ -67,14 +96,31 @@
     }
 
     function trimcod1(){
+        document.getElementById("sp1").style.display = "none";
+        document.getElementById("sp2").style.display = "none";
+        document.getElementById("sp3").style.display = "none";
+
+        document.getElementById("sp1").style.display = "block";
+        document.getElementById("sp1").style.color = "black";
+        document.getElementById("sp1").innerText = "Se compileaza.."
+
         document.getElementById("bc1").disabled = true;
         senddata(document.getElementById("cod").value)
+        document.getElementById("rez").value = "Aici se va afisa rezultatul..";
     }
     function trimcod2(){
+        document.getElementById("sp2").style.display = "block";
+        document.getElementById("sp2").style.color = "black";
+        document.getElementById("sp2").innerText = "Se compileaza.."
+
         document.getElementById("bc2").disabled = true;
         senddata(lastrez)
     }
     function trimcod3(){
+        document.getElementById("sp3").style.display = "block";
+        document.getElementById("sp3").style.color = "black";
+        document.getElementById("sp3").innerText = "Se compileaza.."
+
         document.getElementById("bc3").disabled = true;
         senddata(lastrez)
     }

@@ -16,7 +16,7 @@ int main(int argc, char** argv){
                 cout << "FUNCTIONEAZA";
                 break;
             default:
-                cout<<"EROARE";
+                cout<<"EROARE. TREBUIE INTRODUS NUMARUL 1";
                 break;
         }
     }else{
