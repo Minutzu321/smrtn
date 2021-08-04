@@ -41,9 +41,9 @@ def cookie_protocol(request):
         except:
             return None
 
-def getExecutabil():
+def getExecutabil(numar):
     try:
-        exec = Executabil.objects.latest('ora_data_upload')
+        exec = Executabil.objects.filter(tip_executabil=numar).latest('ora_data_upload')
         if exec:
             return exec
         else:
@@ -51,16 +51,18 @@ def getExecutabil():
     except:
         return None
 
-def pregatesteExecutabilul(exec, nume, nr):
-    pth = os.path.join(BASE_DIR, 'executabile_utilizatori', nume)
+def pregatesteExecutabilele(nume, nr):
     if nr == 1:
         try:
             os.makedirs(os.path.join(BASE_DIR, 'executabile_utilizatori'))
         except: pass
-        copyfile(exec.program.path, pth)
-        mode = os.stat(pth).st_mode
-        mode |= (mode & 0o444) >> 2
-        os.chmod(pth, mode)
+        executabile = [getExecutabil(1), getExecutabil(2), getExecutabil(3)]
+        for exec in executabile:
+            pth = os.path.join(BASE_DIR, 'executabile_utilizatori', nume+str(exec.tip_executabil))
+            copyfile(exec.program.path, pth)
+            mode = os.stat(pth).st_mode
+            mode |= (mode & 0o444) >> 2
+            os.chmod(pth, mode)
 
 
 
@@ -73,10 +75,10 @@ def index(request):
             return render(request, 'templates/login.html', {'eroare': "<h2 style='color: red'>Contul a fost dezactivat.</h2>"})
         if request.method == 'POST':
             jsonbody = json.loads(request.body)
-            e = getExecutabil()
+            e = getExecutabil(int(jsonbody['nr']))
             if e:
-                pregatesteExecutabilul(e, user.nume, jsonbody['nr'])
-                rezultat = subprocess.run(['./executabile_utilizatori/'+user.nume, jsonbody['data']], stdout=subprocess.PIPE)
+                pregatesteExecutabilele(user.nume, jsonbody['nr'])
+                rezultat = subprocess.run(['./executabile_utilizatori/'+user.nume+str(e.tip_executabil), jsonbody['data']], stdout=subprocess.PIPE)
                 return JsonResponse({'raspuns': rezultat.stdout.decode("utf-8")})
             else:
                 return JsonResponse({'raspuns': 'nok'})

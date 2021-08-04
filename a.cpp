@@ -6,8 +6,8 @@ int main(int argc, char** argv){
     if(argc==2){
         int a = atoi(argv[1]);
         switch(a){
-            case 2:
-                cout << "3";
+            case 1:
+                cout << "2";
                 break;
             default:
                 cout<<"EROARE. TREBUIE INTRODUS NUMARUL 1";

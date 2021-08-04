@@ -22,5 +22,6 @@ class Utilizator(models.Model):
 class Executabil(models.Model):
     program = models.FileField(upload_to='programe/%Y/%m/%d/')
     ora_data_upload = models.DateTimeField(default=timezone.now)
+    tip_executabil = models.SmallIntegerField(default=1)
     def __str__(self):
         return (str(self.program)).replace("/","-")
