@@ -1,1 +1,2 @@
-Acest proiect este facut pentru a rula un sistem de testare beta al unui limbaj de programare.
+Acest proiect este facut pentru a testa un sistem aflat in beta.
+Administratorul introduce fisierele iar userii pot introduce date si sa le ruleze fara a vedea codul executabilelor.
